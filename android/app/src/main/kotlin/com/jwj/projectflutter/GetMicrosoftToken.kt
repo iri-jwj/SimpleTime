@@ -3,20 +3,18 @@ package com.jwj.projectflutter
 import android.app.Activity
 import android.content.Intent
 import android.util.Log
-import com.android.volley.AuthFailureError
-import com.android.volley.DefaultRetryPolicy
-import com.android.volley.Request
-import com.android.volley.Response
-import com.android.volley.toolbox.JsonObjectRequest
-import com.android.volley.toolbox.Volley
 import com.microsoft.identity.client.*
 import io.flutter.plugin.common.MethodChannel
-import org.json.JSONObject
 
 class GetMicrosoftToken(private val activity: Activity) {
-    private val CLIENT_ID = "94e6f01c-2239-4fec-9fed-b28ef20a649a"
-    private val SCOPES = arrayOf("https://graph.microsoft.com/User.Read")
-    private val MSGRAPH_URL = "https://graph.microsoft.com/v1.0/me"
+    private val clientId = "94e6f01c-2239-4fec-9fed-b28ef20a649a"
+    private val scopes = arrayOf("https://graph.microsoft.com/Files.ReadWrite",
+            "https://graph.microsoft.com/User.Read",
+            "https://graph.microsoft.com/Files.ReadWrite.AppFolder")
+    private val msGraphUrl = "https://graph.microsoft.com/v1.0/me"
+    private val authority = "https://login.microsoftonline.com/common"
+
+
     private var sampleApp: PublicClientApplication? = null
     private val TAG = GetMicrosoftToken::class.java.simpleName
     private var authResult: AuthenticationResult? = null
@@ -26,20 +24,20 @@ class GetMicrosoftToken(private val activity: Activity) {
         if (sampleApp == null) {
             sampleApp = PublicClientApplication(
                     activity.applicationContext,
-                    CLIENT_ID)
+                    clientId)
         }
 
-        var users: List<User>?
+        val users: List<User>?
         try {
             users = sampleApp?.users?.toList()
 
             if (users != null && users.size == 1) {
                 /* We have 1 user */
-                sampleApp?.acquireTokenSilentAsync(SCOPES, users[0], getAuthSilentCallback())
+                sampleApp?.acquireTokenSilentAsync(scopes, users[0], getAuthSilentCallback())
             } else {
                 /* We have no user */
                 /* Let's do an interactive request */
-                sampleApp?.acquireToken(activity, SCOPES, getAuthInteractiveCallback())
+                sampleApp?.acquireToken(activity, scopes, getAuthInteractiveCallback())
             }
         } catch (e: MsalClientException) {
             Log.d(TAG, "MSAL Exception Generated while getting users: " + e.toString())
@@ -65,7 +63,7 @@ class GetMicrosoftToken(private val activity: Activity) {
 
             override fun onError(exception: MsalException) {
                 /* Failed to acquireToken */
-                Log.d(TAG, "Authentication failed: " + exception.toString());
+                Log.d(TAG, "Authentication failed: " + exception.toString())
                 res?.error("connect", "Authentication failed: ", null)
                 when (exception) {
                     is MsalClientException -> {
@@ -86,7 +84,7 @@ class GetMicrosoftToken(private val activity: Activity) {
                 res?.error("connect", "cancel: ", null)
 
             }
-        };
+        }
     }
 
     /* Callback used for interactive request.  If succeeds we use the access
@@ -97,7 +95,7 @@ class GetMicrosoftToken(private val activity: Activity) {
 
             override fun onSuccess(authenticationResult: AuthenticationResult) {
                 /* Successfully got a token, call graph now */
-                Log.d(TAG, "Successfully authenticated");
+                Log.d(TAG, "Successfully authenticated")
                 Log.d(TAG, "ID Token: " + authenticationResult.idToken)
 
                 /* Store the auth result */
@@ -111,7 +109,7 @@ class GetMicrosoftToken(private val activity: Activity) {
 
             override fun onError(exception: MsalException) {
                 /* Failed to acquireToken */
-                Log.d(TAG, "Authentication failed: " + exception.toString());
+                Log.d(TAG, "Authentication failed: " + exception.toString())
                 res?.error("connect", "Authentication failed: ", null)
 
                 if (exception is MsalClientException) {
@@ -127,7 +125,7 @@ class GetMicrosoftToken(private val activity: Activity) {
                 res?.error("connect", "cancel: ", null)
 
             }
-        };
+        }
     }
 
 
@@ -138,10 +136,10 @@ class GetMicrosoftToken(private val activity: Activity) {
         sampleApp?.handleInteractiveRequestRedirect(requestCode, resultCode, data)
     }
 
-    private fun callGraphAPI() {
+    /*private fun callGraphAPI() {
         Log.d(TAG, "Starting volley request to graph")
 
-        /* Make sure we have a token to send to graph */
+        *//* Make sure we have a token to send to graph *//*
         if (authResult?.accessToken == null) {
             return
         }
@@ -155,10 +153,10 @@ class GetMicrosoftToken(private val activity: Activity) {
             Log.d(TAG, "Failed to put parameters: " + e.toString())
         }
 
-        val request = object : JsonObjectRequest(Request.Method.GET, MSGRAPH_URL,
+        val request = object : JsonObjectRequest(Request.Method.GET, msGraphUrl,
                 parameters,
                 Response.Listener<JSONObject> { response ->
-                    /* Successfully called graph, process data and send to UI */
+                    *//* Successfully called graph, process data and send to UI *//*
                     Log.d(TAG, "Response: " + response.toString())
                 },
                 Response.ErrorListener { error -> Log.d(TAG, "Error: " + error.toString()) }) {
@@ -177,13 +175,13 @@ class GetMicrosoftToken(private val activity: Activity) {
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
         queue.add(request)
-    }
+    }*/
 
 
     fun signOut(): Boolean {
         var result = true
         /* Attempt to get a user and remove their cookies from cache */
-        var users: List<User>? = null
+        val users: List<User>?
         try {
             users = sampleApp?.users
             when {

@@ -20,7 +20,9 @@ import org.json.JSONObject
 
 class CallOneDriveActivity : Activity() {
     private val CLIENT_ID = "94e6f01c-2239-4fec-9fed-b28ef20a649a"
-    private val SCOPES = arrayOf("https://graph.microsoft.com/User.Read")
+    private val SCOPES = arrayOf("https://graph.microsoft.com/Files.ReadWrite",
+            "https://graph.microsoft.com/User.Read",
+            "https://graph.microsoft.com/Files.ReadWrite.AppFolder")
     private val MSGRAPH_URL = "https://graph.microsoft.com/v1.0/me"
 
     /* UI & Debugging Variables */
