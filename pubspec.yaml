@@ -22,6 +22,9 @@ dependencies:
   path_provider: ^0.4.1
   shared_preferences: ^0.4.3
   dio: ^1.0.9
+  flutter_screenutil: ^0.4.2
+  sqflite: ^0.13.0
+  connectivity: ^0.3.2
 
 dev_dependencies:
   flutter_test:
