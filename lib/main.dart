@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:project_flutter/scenes/syn.dart';
 
 void main() => runApp(MyApp());
 
@@ -13,6 +14,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: MyHomePage(title: 'Flutter Demo Home Page'),
+      routes: <String, WidgetBuilder>{'syn': (_) => SynchronizePage(key)},
     );
   }
 }
@@ -32,28 +34,69 @@ class _MyHomePageState extends State<MyHomePage> {
   void _incrementCounter() {
     setState(() {
       _counter++;
-      _jumpToNative();
+      Navigator.of(context).pushNamed("syn");
     });
-  }
-
-  static const jumpPlugin = const MethodChannel('com.jwj.project_flutter/jump');
-
-  Future<Null> _jumpToNative() async {
-    String result = await jumpPlugin.invokeMethod('connect');
-    print(result);
   }
 
   @override
   Widget build(BuildContext context) {
+    ScreenUtil.instance = ScreenUtil(width: 1080, height: 1920)
+      ..init(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          children: <Widget>[
+            new Container(
+              height: ScreenUtil().setHeight(150),
+              child: new Center(
+                child: new Text("MenuList", textAlign: TextAlign.center),
+              ),
+            ),
+            new Divider(
+              height: 1,
+            ),
+            new ListTile(
+              title: new Text("todos", textAlign: TextAlign.center),
+              onTap: null,
+            ),
+            new Divider(
+              height: 1,
+            ),
+            new ListTile(
+              title: new Text("日程管理", textAlign: TextAlign.center),
+              onTap: null,
+            ),
+            new Divider(
+              height: 1,
+            ),
+            new ListTile(
+              title: new Text("年度计划", textAlign: TextAlign.center),
+              onTap: null,
+            ),
+            new Divider(
+              height: 1,
+            ),
+            new ListTile(
+                title: new Text("同步", textAlign: TextAlign.center),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pushNamed("syn");
+                }
+            ),
+            new Divider(
+              height: 1,
+            ),
+          ],
+        ),
       ),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
         child: Column(
-
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
@@ -61,7 +104,10 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Text(
               '$_counter',
-              style: Theme.of(context).textTheme.display1,
+              style: Theme
+                  .of(context)
+                  .textTheme
+                  .display1,
             ),
           ],
         ),
