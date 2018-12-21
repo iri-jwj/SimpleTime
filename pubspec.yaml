@@ -25,11 +25,13 @@ dependencies:
   flutter_screenutil: ^0.4.2
   sqflite: ^0.13.0
   connectivity: ^0.3.2
-  annotation_route: any
 
 dev_dependencies:
+  annotation_route: any
+  build_runner: any
   flutter_test:
     sdk: flutter
+
 
 
 # For information on the generic Dart part of this file, see the
