@@ -64,16 +64,18 @@ class GetMicrosoftToken(private val activity: Activity) {
             override fun onError(exception: MsalException) {
                 /* Failed to acquireToken */
                 Log.d(TAG, "Authentication failed: " + exception.toString())
-                res?.error("connect", "Authentication failed: ", null)
                 when (exception) {
                     is MsalClientException -> {
                         /* Exception inside MSAL, more info inside MsalError.java */
+                        res?.success("failed inside")
                     }
                     is MsalServiceException -> {
                         /* Exception when communicating with the STS, likely config issue */
+                        res?.success("failed in config")
                     }
                     is MsalUiRequiredException -> {
                         /* Tokens expired or no session, retry with interactive */
+                        res?.success("retry")
                     }
                 }
             }
@@ -81,7 +83,7 @@ class GetMicrosoftToken(private val activity: Activity) {
             override fun onCancel() {
                 /* User cancelled the authentication */
                 Log.d(TAG, "User cancelled login.")
-                res?.error("connect", "cancel: ", null)
+                res?.success("cancel")
 
             }
         }
@@ -114,15 +116,17 @@ class GetMicrosoftToken(private val activity: Activity) {
 
                 if (exception is MsalClientException) {
                     /* Exception inside MSAL, more info inside MsalError.java */
+                    res?.success("failed inside")
                 } else if (exception is MsalServiceException) {
                     /* Exception when communicating with the STS, likely config issue */
+                    res?.success("failed config")
                 }
             }
 
             override fun onCancel() {
                 /* User cancelled the authentication */
                 Log.d(TAG, "User cancelled login.")
-                res?.error("connect", "cancel: ", null)
+                res?.success("failed cancel")
 
             }
         }

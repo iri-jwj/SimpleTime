@@ -41,9 +41,9 @@ class JumpToSynchronizePlugin(private val activity: Activity) : MethodChannel.Me
                 Log.d(TAG, "in disconnect")
                 val result = microsoftToken!!.signOut()
                 if (result) {
-                    p1?.success("sign out success")
+                    p1?.success("success")
                 } else {
-                    p1?.error("disconnect", "fail to sign out", null)
+                    p1?.success("failed")
                 }
                 Log.d(TAG, "result=$result")
             }

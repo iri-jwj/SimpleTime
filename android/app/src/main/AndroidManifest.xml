@@ -15,7 +15,7 @@
          FlutterApplication and put your custom class here. -->
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="ProjectFlutter"
+        android:label="SimpleTime"
         android:icon="@mipmap/ic_launcher"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
         <activity

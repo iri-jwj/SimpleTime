@@ -20,4 +20,6 @@ class ProjectRouter {
 class ProjectRouterOption {
   String urlPattern;
   Map<String, dynamic> params;
+
+  ProjectRouterOption(this.urlPattern, this.params);
 }

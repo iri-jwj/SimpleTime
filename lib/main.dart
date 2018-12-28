@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:project_flutter/scenes/syn.dart';
+import 'package:project_flutter/util/Routers.dart';
 
 void main() => runApp(MyApp());
 
@@ -13,16 +14,17 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Simple Time'),
-      routes: <String, WidgetBuilder>{'syn': (_) => SynchronizePage(key)},
+      home: MyHomePage(myKey: key, title: 'Simple Time'),
+      routes: <String, WidgetBuilder>{'syn': (_) => SynchronizePage(null)},
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({this.myKey, this.title}) : super(key: myKey);
 
   final String title;
+  final Key myKey;
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -40,8 +42,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    ScreenUtil.instance = ScreenUtil(width: 1080, height: 1920)
-      ..init(context);
+    ScreenUtil.instance = ScreenUtil(width: 1080, height: 1920)..init(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -84,9 +85,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 title: new Text("同步", textAlign: TextAlign.center),
                 onTap: () {
                   Navigator.of(context).pop();
-                  Navigator.of(context).pushNamed("syn");
-                }
-            ),
+                  ProjectRouter().getPage(ProjectRouterOption(
+                      "projectFlutter://synchronize",
+                      <String, dynamic>{'key': widget.myKey}));
+                }),
             new Divider(
               height: 1,
             ),
@@ -104,10 +106,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Text(
               '$_counter',
-              style: Theme
-                  .of(context)
-                  .textTheme
-                  .display1,
+              style: Theme.of(context).textTheme.display1,
             ),
           ],
         ),
