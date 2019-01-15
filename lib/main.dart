@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:project_flutter/scenes/syn.dart';
 import 'package:project_flutter/util/Routers.dart';
 
 void main() => runApp(MyApp());
@@ -15,7 +14,6 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: MyHomePage(myKey: key, title: 'Simple Time'),
-      routes: <String, WidgetBuilder>{'syn': (_) => SynchronizePage(null)},
     );
   }
 }
@@ -27,19 +25,21 @@ class MyHomePage extends StatefulWidget {
   final Key myKey;
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _MyHomePageState createState() {
+    _MyHomePageState.key = myKey;
+    return _MyHomePageState();
+  }
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  static Key key;
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-      Navigator.of(context).pushNamed("syn");
-    });
+  Widget _showingPage = ProjectRouter()
+      .getPageByName("PersonalSchedule", <String, dynamic>{'key': key});
+
+  void onTapListener(){
+
   }
-
   @override
   Widget build(BuildContext context) {
     ScreenUtil.instance = ScreenUtil(width: 1080, height: 1920)..init(context);
@@ -52,7 +52,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: ListView(
           children: <Widget>[
             new Container(
-              height: ScreenUtil().setHeight(150),
+              height: ScreenUtil().setHeight(164),
               child: new Center(
                 child: new Text("MenuList", textAlign: TextAlign.center),
               ),
@@ -61,15 +61,12 @@ class _MyHomePageState extends State<MyHomePage> {
               height: 1,
             ),
             new ListTile(
-              title: new Text("todos", textAlign: TextAlign.center),
-              onTap: null,
-            ),
-            new Divider(
-              height: 1,
-            ),
-            new ListTile(
-              title: new Text("日程管理", textAlign: TextAlign.center),
-              onTap: null,
+              title: new Text("日程与to-dos", textAlign: TextAlign.center),
+              onTap: () {
+                Navigator.of(context).pop();
+                ProjectRouter().jumpToByName("PersonalSchedule",
+                    <String, dynamic>{'key': widget.myKey}, context);
+              },
             ),
             new Divider(
               height: 1,
@@ -77,6 +74,7 @@ class _MyHomePageState extends State<MyHomePage> {
             new ListTile(
               title: new Text("年度计划", textAlign: TextAlign.center),
               onTap: null,
+              selected: true,
             ),
             new Divider(
               height: 1,
@@ -85,9 +83,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 title: new Text("同步", textAlign: TextAlign.center),
                 onTap: () {
                   Navigator.of(context).pop();
-                  ProjectRouter().getPage(ProjectRouterOption(
-                      "projectFlutter://synchronize",
-                      <String, dynamic>{'key': widget.myKey}));
+                  ProjectRouter().jumpToByName("synchronize",
+                      <String, dynamic>{'key': widget.myKey}, context);
                 }),
             new Divider(
               height: 1,
@@ -95,27 +92,9 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.display1,
-            ),
-          ],
-        ),
+      body: Container(
+        child: _showingPage,
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }

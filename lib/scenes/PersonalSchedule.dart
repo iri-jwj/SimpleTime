@@ -1,6 +1,8 @@
+import 'package:annotation_route/route.dart';
 import 'package:flutter/material.dart';
 import 'package:project_flutter/main.dart';
 
+@ARoute(url: 'projectFlutter://PersonalSchedule')
 class PersonalSchedule extends StatefulWidget {
   @override
   _PersonalScheduleState createState() => _PersonalScheduleState();
