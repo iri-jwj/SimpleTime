@@ -56,7 +56,7 @@ class GetMicrosoftToken(private val activity: Activity) {
 
                 /* Store the authResult */
                 authResult = authenticationResult
-                res?.success(authResult?.accessToken)
+                sendResultToFlutter(authResult?.accessToken)
                 /* call graph */
                 /* update the UI to post call Graph state */
             }
@@ -67,15 +67,15 @@ class GetMicrosoftToken(private val activity: Activity) {
                 when (exception) {
                     is MsalClientException -> {
                         /* Exception inside MSAL, more info inside MsalError.java */
-                        res?.success("failed inside")
+                        sendResultToFlutter("failed inside")
                     }
                     is MsalServiceException -> {
                         /* Exception when communicating with the STS, likely config issue */
-                        res?.success("failed in config")
+                        sendResultToFlutter("failed in config")
                     }
                     is MsalUiRequiredException -> {
                         /* Tokens expired or no session, retry with interactive */
-                        res?.success("retry")
+                        sendResultToFlutter("retry")
                     }
                 }
             }
@@ -102,7 +102,7 @@ class GetMicrosoftToken(private val activity: Activity) {
 
                 /* Store the auth result */
                 authResult = authenticationResult
-                res?.success(authResult?.accessToken)
+                sendResultToFlutter(authResult?.accessToken)
 
 
                 /* call Graph */
@@ -112,23 +112,28 @@ class GetMicrosoftToken(private val activity: Activity) {
             override fun onError(exception: MsalException) {
                 /* Failed to acquireToken */
                 Log.d(TAG, "Authentication failed: " + exception.toString())
-                res?.error("connect", "Authentication failed: ", null)
-
                 if (exception is MsalClientException) {
                     /* Exception inside MSAL, more info inside MsalError.java */
-                    res?.success("failed inside")
+                    sendResultToFlutter("failed inside")
                 } else if (exception is MsalServiceException) {
                     /* Exception when communicating with the STS, likely config issue */
-                    res?.success("failed config")
+                    sendResultToFlutter("failed config")
                 }
             }
 
             override fun onCancel() {
                 /* User cancelled the authentication */
                 Log.d(TAG, "User cancelled login.")
-                res?.success("failed cancel")
+                sendResultToFlutter("failed cancel")
 
             }
+        }
+    }
+
+    private fun sendResultToFlutter(message: String?) {
+        if (res != null) {
+            res?.success(message)
+            res = null
         }
     }
 

@@ -1,14 +1,17 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Modify this file to customize your launch splash screen -->
+<?xml version="1.0" encoding="utf-8"?><!-- Modify this file to customize your launch splash screen -->
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@android:color/white" />
+    <item android:gravity="fill">
+        <shape android:shape="rectangle">
+            <solid android:color="@android:color/white" />
+        </shape>
+    </item>
 
     <!-- You can insert your own image assets here -->
-     <item>
+    <item android:gravity="center">
         <bitmap
+            android:antialias="true"
             android:gravity="center"
             android:src="@drawable/simple_time_logo"
-            android:antialias="true"
-            />
+            android:tileMode="disabled" />
     </item>
 </layer-list>

@@ -37,16 +37,37 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget _showingPage = ProjectRouter()
       .getPageByName("PersonalSchedule", <String, dynamic>{'key': key});
 
-  void onTapListener(){
+  final Map<String, int> _mapping = {
+    'PersonalSchedule': 1,
+    'AnnualPlan': 2,
+    'synchronize': 4
+  };
 
+  int _selectedPage = 1;
+  String _title = "日程与to-dos";
+
+  void _onTapListener(BuildContext context, String targetPage,
+      Map<String, dynamic> params, String title) {
+    Navigator.of(context).pop();
+    setState(() {
+      _title = title;
+      _showingPage = ProjectRouter().getPageByName(targetPage, params);
+      _updateCheckItem(targetPage);
+    });
   }
+
+  void _updateCheckItem(String targetPage) {
+    _selectedPage = _mapping[targetPage];
+  }
+
   @override
   Widget build(BuildContext context) {
     ScreenUtil.instance = ScreenUtil(width: 1080, height: 1920)..init(context);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text(_title),
+        centerTitle: true,
       ),
       drawer: Drawer(
         child: ListView(
@@ -63,18 +84,21 @@ class _MyHomePageState extends State<MyHomePage> {
             new ListTile(
               title: new Text("日程与to-dos", textAlign: TextAlign.center),
               onTap: () {
-                Navigator.of(context).pop();
-                ProjectRouter().jumpToByName("PersonalSchedule",
-                    <String, dynamic>{'key': widget.myKey}, context);
+                _onTapListener(context, "PersonalSchedule",
+                    <String, dynamic>{'key': widget.myKey}, "日程与to-dos");
               },
+              selected: 1 == _selectedPage,
             ),
             new Divider(
               height: 1,
             ),
             new ListTile(
               title: new Text("年度计划", textAlign: TextAlign.center),
-              onTap: null,
-              selected: true,
+              onTap: () {
+                _onTapListener(context, "AnnualPlan",
+                    <String, dynamic>{'key': widget.myKey}, "年度计划");
+              },
+              selected: 2 == _selectedPage,
             ),
             new Divider(
               height: 1,
@@ -82,10 +106,10 @@ class _MyHomePageState extends State<MyHomePage> {
             new ListTile(
                 title: new Text("同步", textAlign: TextAlign.center),
                 onTap: () {
-                  Navigator.of(context).pop();
-                  ProjectRouter().jumpToByName("synchronize",
-                      <String, dynamic>{'key': widget.myKey}, context);
-                }),
+                  _onTapListener(context, "synchronize",
+                      <String, dynamic>{'key': widget.myKey}, "同步");
+                },
+                selected: 4 == _selectedPage),
             new Divider(
               height: 1,
             ),

@@ -8,6 +8,7 @@ import 'package:project_flutter/util/Routers.dart';
 class SynchronizePage extends StatefulWidget {
   SynchronizePage(this.option) : super(key: option.params["key"]);
   final ProjectRouterOption option;
+
   @override
   _SynchronizeState createState() => _SynchronizeState();
 }
@@ -55,27 +56,24 @@ class _SynchronizeState extends State<SynchronizePage> {
       ),
     );
 
-    return Scaffold(
-        appBar: AppBar(
-          title: Text("同步"),
-          centerTitle: true,
-        ),
-        body: new Builder(builder: (BuildContext context) {
-          return Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: Column(
-              children: <Widget>[
-                Center(
-                  child: GestureDetector(
-                    child: c,
-                    onTap: () {
-                      _jumpToNative(context);
-                    },
-                  ),
-                ),
-              ],
+    return AnimatedOpacity(
+      opacity: 1,
+      duration: Duration(milliseconds: 200),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: Column(
+          children: <Widget>[
+            Center(
+              child: GestureDetector(
+                child: c,
+                onTap: () {
+                  _jumpToNative(context);
+                },
+              ),
             ),
-          );
-        }));
+          ],
+        ),
+      ),
+    );
   }
 }
