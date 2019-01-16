@@ -31,12 +31,15 @@ class _SynchronizeState extends State<SynchronizePage> {
   @override
   Widget build(BuildContext context) {
     ScreenUtil.instance = ScreenUtil(width: 1080, height: 1920)..init(context);
+
+    //阴影配置
     List<BoxShadow> shadows = List<BoxShadow>();
     shadows.add(BoxShadow(
         color: Color.fromRGBO(86, 164, 252, 0.3),
         offset: Offset(3, 3),
         blurRadius: 3));
 
+    //界面内容
     Container c = Container(
       margin: EdgeInsets.only(top: ScreenUtil.instance.setWidth(117)),
       height: ScreenUtil.instance.setWidth(100),

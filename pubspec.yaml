@@ -25,6 +25,8 @@ dependencies:
   flutter_screenutil: ^0.4.2
   sqflite: ^0.13.0
   connectivity: ^0.3.2
+  json_annotation: ^2.0.0
+  json_serializable: ^2.0.1
 
 dev_dependencies:
   annotation_route: any

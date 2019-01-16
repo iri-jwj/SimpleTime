@@ -37,7 +37,7 @@ private func authenticate(flutterResult: @escaping FlutterResult){
             switch graphError {
             case .nsErrorType(let nsError):
                 print(NSLocalizedString("ERROR", comment: ""), nsError.userInfo)
-                flutterResult(FlutterError(code: "connect", message: "Authentication failed: ", details: nil))
+                flutterResult("authentication failed")
             }
             return false
         }

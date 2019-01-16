@@ -11,7 +11,7 @@
         <bitmap
             android:antialias="true"
             android:gravity="center"
-            android:src="@drawable/simple_time_logo"
+            android:src="@drawable/launch_image"
             android:tileMode="disabled" />
     </item>
 </layer-list>
