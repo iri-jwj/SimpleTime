@@ -1,6 +1,6 @@
 import 'package:annotation_route/route.dart';
 import 'package:flutter/material.dart';
-import 'package:project_flutter/util/Routers.internal.dart';
+import 'package:project_flutter/util/routers.internal.dart';
 
 @ARouteRoot()
 class ProjectRouter {

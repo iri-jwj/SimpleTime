@@ -6,22 +6,22 @@
 
 import 'dart:convert';
 import 'package:annotation_route/route.dart';
-import 'package:project_flutter/scenes/annualplan/AnnualPlan.dart';
-import 'package:project_flutter/scenes/personalschedule/PersonalSchedule.dart';
-import 'package:project_flutter/scenes/synchronize/Synchronize.dart';
+import 'package:project_flutter/scenes/personalschedule/personal_schedule.dart';
+import 'package:project_flutter/scenes/synchronize/synchronize.dart';
+import 'package:project_flutter/scenes/annualplan/annual_plan.dart';
 
 class ARouterInternalImpl extends ARouterInternal {
   ARouterInternalImpl();
   final Map<String, List<Map<String, dynamic>>> innerRouterMap =
       <String, List<Map<String, dynamic>>>{
-    'projectFlutter://AnnualPlan': [
-      {'clazz': AnnualPlanPage}
-    ],
     'projectFlutter://PersonalSchedule': [
       {'clazz': PersonalSchedule}
     ],
     'projectFlutter://synchronize': [
       {'clazz': SynchronizePage}
+    ],
+    'projectFlutter://AnnualPlan': [
+      {'clazz': AnnualPlanPage}
     ]
   };
 
@@ -46,12 +46,12 @@ class ARouterInternalImpl extends ARouterInternal {
 
   dynamic instanceFromClazz(Type clazz, dynamic option) {
     switch (clazz) {
-      case AnnualPlanPage:
-        return new AnnualPlanPage(option);
       case PersonalSchedule:
         return new PersonalSchedule(option);
       case SynchronizePage:
         return new SynchronizePage(option);
+      case AnnualPlanPage:
+        return new AnnualPlanPage(option);
       default:
         return null;
     }

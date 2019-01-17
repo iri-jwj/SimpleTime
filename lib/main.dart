@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:project_flutter/util/Routers.dart';
+import 'package:project_flutter/util/routers.dart';
 
 void main() => runApp(MyApp());
 

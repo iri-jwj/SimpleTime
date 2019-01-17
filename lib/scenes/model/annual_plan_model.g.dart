@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'AnnualPlanModel.dart';
+part of 'annual_plan_model.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
@@ -8,17 +8,23 @@ part of 'AnnualPlanModel.dart';
 
 AnnualPlanModel _$AnnualPlanModelFromJson(Map<String, dynamic> json) {
   return AnnualPlanModel(
-      json['title'] as String,
-      json['isCyclePlan'] as bool,
-      _$enumDecode(_$PlanCycleEnumMap, json['cycle']),
-      DateTime.parse(json['remindDate'] as String),
-      json['remark'] as String,
-      _$enumDecode(_$PlanRemindOpportunityEnumMap, json['remindOpportunity']),
-      json['isAutoDelay'] as bool,
-      json['lastDayRemind'] as bool,
-      DateTime.parse(json['whenToStart'] as String),
-      json['isAllYearPlan'] as bool,
-      json['lastTimes'] as int);
+      title: json['title'] as String,
+      isCyclePlan: json['isCyclePlan'] as bool,
+      cycle: _$enumDecodeNullable(_$PlanCycleEnumMap, json['cycle']),
+      remindDate: json['remindDate'] == null
+          ? null
+          : DateTime.parse(json['remindDate'] as String),
+      remark: json['remark'] as String,
+      remindOpportunity: _$enumDecodeNullable(
+          _$PlanRemindOpportunityEnumMap, json['remindOpportunity']),
+      isAutoDelay: json['isAutoDelay'] as bool,
+      lastDayRemind: json['lastDayRemind'] as bool,
+      whenToStart: json['whenToStart'] == null
+          ? null
+          : DateTime.parse(json['whenToStart'] as String),
+      isAllYearPlan: json['isAllYearPlan'] as bool,
+      lastTimes: json['lastTimes'] as int,
+      progress: (json['progress'] as num)?.toDouble());
 }
 
 Map<String, dynamic> _$AnnualPlanModelToJson(AnnualPlanModel instance) =>
@@ -26,15 +32,16 @@ Map<String, dynamic> _$AnnualPlanModelToJson(AnnualPlanModel instance) =>
       'title': instance.title,
       'isCyclePlan': instance.isCyclePlan,
       'cycle': _$PlanCycleEnumMap[instance.cycle],
-      'remindDate': instance.remindDate.toIso8601String(),
+      'remindDate': instance.remindDate?.toIso8601String(),
       'remark': instance.remark,
       'remindOpportunity':
           _$PlanRemindOpportunityEnumMap[instance.remindOpportunity],
       'isAutoDelay': instance.isAutoDelay,
       'lastDayRemind': instance.lastDayRemind,
-      'whenToStart': instance.whenToStart.toIso8601String(),
+      'whenToStart': instance.whenToStart?.toIso8601String(),
       'isAllYearPlan': instance.isAllYearPlan,
-      'lastTimes': instance.lastTimes
+      'lastTimes': instance.lastTimes,
+      'progress': instance.progress
     };
 
 T _$enumDecode<T>(Map<T, dynamic> enumValues, dynamic source) {
@@ -48,6 +55,13 @@ T _$enumDecode<T>(Map<T, dynamic> enumValues, dynamic source) {
               '`$source` is not one of the supported values: '
               '${enumValues.values.join(', ')}'))
       .key;
+}
+
+T _$enumDecodeNullable<T>(Map<T, dynamic> enumValues, dynamic source) {
+  if (source == null) {
+    return null;
+  }
+  return _$enumDecode<T>(enumValues, source);
 }
 
 const _$PlanCycleEnumMap = <PlanCycle, dynamic>{

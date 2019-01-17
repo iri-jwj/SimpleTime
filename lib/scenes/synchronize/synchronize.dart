@@ -2,7 +2,7 @@ import 'package:annotation_route/route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:project_flutter/util/Routers.dart';
+import 'package:project_flutter/util/routers.dart';
 
 @ARoute(url: 'projectFlutter://synchronize')
 class SynchronizePage extends StatefulWidget {
