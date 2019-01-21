@@ -7,9 +7,8 @@ part of 'annual_plan_model.dart';
 // **************************************************************************
 
 AnnualPlanModel _$AnnualPlanModelFromJson(Map<String, dynamic> json) {
-  return AnnualPlanModel(
-      title: json['title'] as String,
-      isCyclePlan: json['isCyclePlan'] as bool,
+  return AnnualPlanModel(json['id'] as String, json['title'] as String,
+      (json['progress'] as num).toDouble(), json['isCyclePlan'] as bool,
       cycle: _$enumDecodeNullable(_$PlanCycleEnumMap, json['cycle']),
       remindDate: json['remindDate'] == null
           ? null
@@ -23,12 +22,12 @@ AnnualPlanModel _$AnnualPlanModelFromJson(Map<String, dynamic> json) {
           ? null
           : DateTime.parse(json['whenToStart'] as String),
       isAllYearPlan: json['isAllYearPlan'] as bool,
-      lastTimes: json['lastTimes'] as int,
-      progress: (json['progress'] as num)?.toDouble());
+      lastTimes: json['lastTimes'] as int);
 }
 
 Map<String, dynamic> _$AnnualPlanModelToJson(AnnualPlanModel instance) =>
     <String, dynamic>{
+      'id': instance.id,
       'title': instance.title,
       'isCyclePlan': instance.isCyclePlan,
       'cycle': _$PlanCycleEnumMap[instance.cycle],

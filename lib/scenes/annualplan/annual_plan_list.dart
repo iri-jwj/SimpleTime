@@ -2,8 +2,8 @@ import 'package:annotation_route/route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:project_flutter/customwidget/fillet_linear_progress_indicator.dart';
-import 'package:project_flutter/scenes/annualplan/annual_plan_viewmodel.dart';
-import 'package:project_flutter/scenes/model/annual_plan_model.dart';
+import 'package:project_flutter/model/annual_plan_model.dart';
+import 'package:project_flutter/scenes/annualplan/annual_plan_list_viewmodel.dart';
 import 'package:project_flutter/util/routers.dart';
 
 @ARoute(url: 'projectFlutter://AnnualPlan')
@@ -22,7 +22,9 @@ class _AnnualPlanPageState extends State<AnnualPlanPage> {
   @override
   void initState() {
     super.initState();
-    _viewModel.loadPlans();
+    Future.delayed(Duration(milliseconds: 300), () {
+      _viewModel.loadPlans();
+    });
   }
 
   Widget _getNoPlansWidget(BuildContext context) {
