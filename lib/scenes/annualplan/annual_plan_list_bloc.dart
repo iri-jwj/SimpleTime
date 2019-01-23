@@ -1,12 +1,11 @@
 import 'package:project_flutter/model/annual_plan_model.dart';
-import 'package:project_flutter/scenes/base_viewmodel.dart';
+import 'package:project_flutter/scenes/base_bloc.dart';
 import 'package:project_flutter/sql/annual_plan_sql_helper.dart';
 import 'package:project_flutter/sql/basic_database.dart';
 import 'package:project_flutter/util/bool_int_converter.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:uuid/uuid.dart';
 
-class AnnualPlanViewModel extends BaseViewModel {
+class AnnualPlanBloc extends BaseBloc {
   bool isInit = true;
   AnnualPlanSqlHelper _helper = AnnualPlanSqlHelper(BasicDatabase.instance);
   List<AnnualPlanModel> planList = List<AnnualPlanModel>();
@@ -23,13 +22,13 @@ class AnnualPlanViewModel extends BaseViewModel {
     putPlanListController.add(planList);
   }
 
-  void editPlan(AnnualPlanModel targetEdited) {}
+  editPlan(AnnualPlanModel targetEdited) {}
 
   loadPlans() async {
-    await _helper.insert(AnnualPlanSqlHelper.TABLE_NAME, AnnualPlanModel(Uuid().v1().toString(), "读书1", 0.2, false).toJson());
+    /*await _helper.insert(AnnualPlanSqlHelper.TABLE_NAME, AnnualPlanModel(Uuid().v1().toString(), "读书1", 0.2, false).toJson());
     await _helper.insert(AnnualPlanSqlHelper.TABLE_NAME, AnnualPlanModel(Uuid().v1().toString(), "读书1", 0.3, false).toJson());
     await _helper.insert(AnnualPlanSqlHelper.TABLE_NAME, AnnualPlanModel(Uuid().v1().toString(), "读书1", 0.4, false).toJson());
-    await _helper.insert(AnnualPlanSqlHelper.TABLE_NAME, AnnualPlanModel(Uuid().v1().toString(), "读书1", 0.1, false).toJson());
+    await _helper.insert(AnnualPlanSqlHelper.TABLE_NAME, AnnualPlanModel(Uuid().v1().toString(), "读书1", 0.1, false).toJson());*/
     var queryResult = await _helper.query(AnnualPlanSqlHelper.TABLE_NAME);
     List<AnnualPlanModel> newModels = List();
     queryResult.forEach((oneEntity) {
@@ -44,6 +43,14 @@ class AnnualPlanViewModel extends BaseViewModel {
     planList.clear();
     planList.addAll(newModels);
     putPlanListController.add(planList);
+  }
+
+  addOnePlan(AnnualPlanModel plan) async {
+    var insertResult =
+        await _helper.insert(AnnualPlanSqlHelper.TABLE_NAME, plan.toJson());
+    if(insertResult <= 0){
+
+    }
   }
 
   depose() {

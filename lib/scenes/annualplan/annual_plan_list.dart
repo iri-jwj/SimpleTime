@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:project_flutter/customwidget/fillet_linear_progress_indicator.dart';
 import 'package:project_flutter/model/annual_plan_model.dart';
-import 'package:project_flutter/scenes/annualplan/annual_plan_list_viewmodel.dart';
+import 'package:project_flutter/scenes/annualplan/annual_plan_list_bloc.dart';
 import 'package:project_flutter/util/routers.dart';
 
 @ARoute(url: 'projectFlutter://AnnualPlan')
@@ -17,14 +17,12 @@ class AnnualPlanPage extends StatefulWidget {
 }
 
 class _AnnualPlanPageState extends State<AnnualPlanPage> {
-  var _viewModel = AnnualPlanViewModel();
+  var _annualPlanBloc = AnnualPlanBloc();
 
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(milliseconds: 300), () {
-      _viewModel.loadPlans();
-    });
+    _annualPlanBloc.loadPlans();
   }
 
   Widget _getNoPlansWidget(BuildContext context) {
@@ -32,7 +30,7 @@ class _AnnualPlanPageState extends State<AnnualPlanPage> {
         child: FlatButton(
       child: Text("add"),
       onPressed: () {
-        _viewModel.loadPlans();
+        _annualPlanBloc.loadPlans();
       },
     ));
   }
@@ -112,7 +110,7 @@ class _AnnualPlanPageState extends State<AnnualPlanPage> {
     ScreenUtil.instance = ScreenUtil(width: 1080, height: 1920)..init(context);
 
     return StreamBuilder<List<AnnualPlanModel>>(
-        stream: _viewModel.getPlanList,
+        stream: _annualPlanBloc.getPlanList,
         builder: (context, planList) {
           List<AnnualPlanModel> plans = planList.data;
           if (plans == null || plans.length == 0) {

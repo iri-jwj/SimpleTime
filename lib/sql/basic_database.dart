@@ -11,18 +11,16 @@ class BasicDatabase {
 
   static BasicDatabase _getInstance() {
     if (_instance == null) {
-      _instance = new BasicDatabase._internal();
+      _instance = new BasicDatabase._internalConstructor();
     }
     return _instance;
   }
 
-  BasicDatabase._internal(){
-     _init();
-  }
+  BasicDatabase._internalConstructor();
 
   Database _database;
 
-  _init() async {
+  initDatabase() async {
     var databasePath = await getDatabasesPath();
     String path = join(databasePath, "simpleTime.db");
     _database = await openDatabase(path, version: 1,

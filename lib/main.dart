@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:project_flutter/sql/basic_database.dart';
 import 'package:project_flutter/util/routers.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  _initResource();
+  runApp(MyApp());
+}
+
+void _initResource() async {
+  await BasicDatabase().initDatabase();
+}
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -33,7 +40,6 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   static Key key;
-
   Widget _showingPage = ProjectRouter()
       .getPageByName("PersonalSchedule", <String, dynamic>{'key': key});
 
@@ -51,7 +57,7 @@ class _MyHomePageState extends State<MyHomePage> {
     Navigator.of(context).pop();
     setState(() {
       _title = title;
-      _showingPage = ProjectRouter().getPageByName(targetPage, params);
+      _showingPage = ProjectRouter().getBlocPage(targetPage, params);
       _updateCheckItem(targetPage);
     });
   }
