@@ -2,14 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:project_flutter/sql/basic_database.dart';
 import 'package:project_flutter/util/routers.dart';
+import 'package:project_flutter/util/shared_preference.dart';
 
-void main() {
-  _initResource();
+void main() async {
+  await _initResource();
   runApp(MyApp());
 }
 
-void _initResource() async {
+_initResource() async {
   await BasicDatabase().initDatabase();
+  await SharedPreference().initSharedPreferences();
+  if (SharedPreference.instance.getData(SharedPreference.FIRST_LAUNCH) ==
+      null) {
+    SharedPreference.instance.putData(SharedPreference.FIRST_LAUNCH, "true");
+  }
 }
 
 class MyApp extends StatelessWidget {
@@ -20,28 +26,23 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(myKey: key, title: 'Simple Time'),
+      home: MyHomePage(title: 'Simple Time'),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({this.myKey, this.title}) : super(key: myKey);
+  MyHomePage({this.title}) : super(key: UniqueKey());
 
   final String title;
-  final Key myKey;
 
   @override
-  _MyHomePageState createState() {
-    _MyHomePageState.key = myKey;
-    return _MyHomePageState();
-  }
+  _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  static Key key;
-  Widget _showingPage = ProjectRouter()
-      .getPageByName("PersonalSchedule", <String, dynamic>{'key': key});
+  Widget _showingPage =
+      ProjectRouter().getBlocPage("PersonalSchedule", <String, dynamic>{});
 
   final Map<String, int> _mapping = {
     'PersonalSchedule': 1,
@@ -90,8 +91,8 @@ class _MyHomePageState extends State<MyHomePage> {
             new ListTile(
               title: new Text("日程与to-dos", textAlign: TextAlign.center),
               onTap: () {
-                _onTapListener(context, "PersonalSchedule",
-                    <String, dynamic>{'key': widget.myKey}, "日程与to-dos");
+                _onTapListener(context, "PersonalSchedule", <String, dynamic>{},
+                    "日程与to-dos");
               },
               selected: 1 == _selectedPage,
             ),
@@ -101,8 +102,8 @@ class _MyHomePageState extends State<MyHomePage> {
             new ListTile(
               title: new Text("年度计划", textAlign: TextAlign.center),
               onTap: () {
-                _onTapListener(context, "AnnualPlan",
-                    <String, dynamic>{'key': widget.myKey}, "年度计划");
+                _onTapListener(
+                    context, "AnnualPlan", <String, dynamic>{}, "年度计划");
               },
               selected: 2 == _selectedPage,
             ),
@@ -112,8 +113,8 @@ class _MyHomePageState extends State<MyHomePage> {
             new ListTile(
                 title: new Text("同步", textAlign: TextAlign.center),
                 onTap: () {
-                  _onTapListener(context, "synchronize",
-                      <String, dynamic>{'key': widget.myKey}, "同步");
+                  _onTapListener(
+                      context, "synchronize", <String, dynamic>{}, "同步");
                 },
                 selected: 4 == _selectedPage),
             new Divider(

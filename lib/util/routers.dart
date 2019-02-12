@@ -32,6 +32,17 @@ class ProjectRouter {
     var result = internal.findPage(
         ARouteOption(option.urlPattern, option.params), option);
     if (result.state == ARouterResultState.FOUND) {
+      switch (target) {
+        case "AnnualPlan":
+          return BlocProvider<AnnualPlanBloc>(
+              child: result.widget, bloc: _blocPageMap[target]);
+        case "PersonalSchedule":
+          return BlocProvider<PersonalScheduleBloc>(
+              child: result.widget, bloc: _blocPageMap[target]);
+        case "synchronize":
+          return BlocProvider<SynchronizeBloc>(
+              child: result.widget, bloc: _blocPageMap[target]);
+      }
       return BlocProvider(child: result.widget, bloc: _blocPageMap[target]);
     } else {
       return null;

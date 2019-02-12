@@ -45,8 +45,9 @@ class Authentication {
      will take place.
      If not, authentication will ask for credentials
      */
-    func connectToGraph(scopes: [String],
-                        completion:@escaping (_ error: ApplicationConstants.MSGraphError?, _ accessToken: String) -> Bool)  {
+    
+    func connectToGraphSliently(scopes: [String],
+                                completion:@escaping (_ error: ApplicationConstants.MSGraphError?, _ accessToken: String) -> Bool) {
         
         do {
             if let initError = self.lastInitError {
@@ -89,11 +90,8 @@ class Authentication {
                     if error == nil {
                         self.accessToken = (result?.accessToken)!
                         var _ = completion(nil, self.accessToken);
-                        
-                        
                     } else  {
                         var _ = completion(ApplicationConstants.MSGraphError.nsErrorType(error: error! as NSError), "");
-                        
                     }
                 }
                 
@@ -107,6 +105,42 @@ class Authentication {
             // This is the catch all error.
             
             
+            var _ = completion(ApplicationConstants.MSGraphError.nsErrorType(error: error as NSError), error.localizedDescription);
+            
+        }
+    }
+    
+    
+    func connectToGraph(scopes: [String],
+                        completion:@escaping (_ error: ApplicationConstants.MSGraphError?, _ accessToken: String) -> Bool)  {
+        
+        do {
+            if let initError = self.lastInitError {
+                if initError.lengthOfBytes(using: String.Encoding.ascii) > 1 {
+                    throw NSError.init(domain: initError, code: 0, userInfo: nil)
+                }
+            }
+            // We check to see if we have a current logged in user. If we don't, then we need to sign someone in.
+            // We throw an interactionRequired so that we trigger the interactive signin.
+            authenticationProvider.acquireToken(forScopes: scopes) { (result, error) in
+                if error == nil {
+                    self.accessToken = (result?.accessToken)!
+                    var _ = completion(nil, self.accessToken);
+                } else  {
+                    var _ = completion(ApplicationConstants.MSGraphError.nsErrorType(error: error! as NSError), "");
+                    
+                }
+            }
+        }  catch let error as NSError {
+            // interactionRequired means we need to ask the user to sign-in. This usually happens
+            // when the user's Refresh Token is expired or if the user has changed their password
+            // among other possible reasons.
+                var _ = completion(ApplicationConstants.MSGraphError.nsErrorType(error: error as NSError), error.localizedDescription);
+
+            
+        } catch {
+            
+            // This is the catch all error.
             var _ = completion(ApplicationConstants.MSGraphError.nsErrorType(error: error as NSError), error.localizedDescription);
             
         }

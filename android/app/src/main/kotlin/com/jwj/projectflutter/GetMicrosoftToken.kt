@@ -3,14 +3,25 @@ package com.jwj.projectflutter
 import android.app.Activity
 import android.content.Intent
 import android.util.Log
-import com.microsoft.identity.client.*
+import com.microsoft.identity.client.AuthenticationCallback
+import com.microsoft.identity.client.AuthenticationResult
+import com.microsoft.identity.client.IAccount
+import com.microsoft.identity.client.PublicClientApplication
+import com.microsoft.identity.client.exception.MsalClientException
+import com.microsoft.identity.client.exception.MsalException
+import com.microsoft.identity.client.exception.MsalServiceException
+import com.microsoft.identity.client.exception.MsalUiRequiredException
 import io.flutter.plugin.common.MethodChannel
 
 class GetMicrosoftToken(private val activity: Activity) {
     private val clientId = "94e6f01c-2239-4fec-9fed-b28ef20a649a"
     private val scopes = arrayOf("https://graph.microsoft.com/Files.ReadWrite",
-            "https://graph.microsoft.com/User.Read",
-            "https://graph.microsoft.com/Files.ReadWrite.AppFolder")
+            "https://graph.microsoft.com/Files.ReadWrite.AppFolder",
+            "https://graph.microsoft.com/Files.Read",
+            "https://graph.microsoft.com/Files.Read.All",
+            "https://graph.microsoft.com/Files.ReadWrite.All",
+            "https://graph.microsoft.com/Sites.Read.All",
+            "https://graph.microsoft.com/Sites.ReadWrite.All")
     private val msGraphUrl = "https://graph.microsoft.com/v1.0/me"
     private val authority = "https://login.microsoftonline.com/common"
 
@@ -24,16 +35,37 @@ class GetMicrosoftToken(private val activity: Activity) {
         if (sampleApp == null) {
             sampleApp = PublicClientApplication(
                     activity.applicationContext,
-                    clientId)
+                    R.raw.auth_config)
+        }
+        try {
+
+            if (sampleApp?.accounts?.size != 0) {
+                sampleApp?.accounts?.clear()
+            }
+            sampleApp?.acquireToken(activity, scopes, getAuthInteractiveCallback())
+        } catch (e: MsalClientException) {
+            Log.d(TAG, "MSAL Exception Generated while getting users: $e")
+
+        } catch (e: IndexOutOfBoundsException) {
+            Log.d(TAG, "User at this position does not exist: $e")
+        }
+    }
+
+    fun getTokenSilent(res: MethodChannel.Result?) {
+        this.res = res
+        if (sampleApp == null) {
+            sampleApp = PublicClientApplication(
+                    activity.applicationContext,
+                    R.raw.auth_config)
         }
 
-        val users: List<User>?
+        val accounts: List<IAccount>?
         try {
-            users = sampleApp?.users?.toList()
+            accounts = sampleApp?.accounts?.toList()
 
-            if (users != null && users.size == 1) {
+            if (accounts != null && accounts.size == 1) {
                 /* We have 1 user */
-                sampleApp?.acquireTokenSilentAsync(scopes, users[0], getAuthSilentCallback())
+                sampleApp?.acquireTokenSilentAsync(scopes, accounts[0], getAuthSilentCallback())
             } else {
                 /* We have no user */
                 /* Let's do an interactive request */
@@ -190,19 +222,19 @@ class GetMicrosoftToken(private val activity: Activity) {
     fun signOut(): Boolean {
         var result = true
         /* Attempt to get a user and remove their cookies from cache */
-        val users: List<User>?
+        val account: List<IAccount>?
         try {
-            users = sampleApp?.users
+            account = sampleApp?.accounts
             when {
-                users == null -> {
+                account == null -> {
                     /* We have no users */
                 }
-                users.size == 1 -> /* We have 1 user */
+                account.size == 1 -> /* We have 1 user */
                     /* Remove from token cache */
-                    sampleApp?.remove(users[0])
+                    sampleApp?.removeAccount(account[0])
                 else -> /* We have multiple users */
-                    for (i in users.indices) {
-                        sampleApp?.remove(users[i])
+                    for (i in account.indices) {
+                        sampleApp?.removeAccount(account[i])
                     }
             }
         } catch (e: MsalClientException) {
@@ -215,4 +247,6 @@ class GetMicrosoftToken(private val activity: Activity) {
         }
         return result
     }
+
+
 }

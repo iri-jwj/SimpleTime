@@ -18,6 +18,8 @@ let au = Authentication.init()
         switch(call.method){
         case "connect":
             authenticate(flutterResult : result)
+        case "connectSlient":
+            authenticateSliently(flutterResult: result)
         case "disconnect":
             unAuthenticate(flutterResult: result)
         default:
@@ -45,6 +47,25 @@ private func authenticate(flutterResult: @escaping FlutterResult){
             // run on main thread!!
             flutterResult(accessToken)
             
+            return true
+        }
+    }
+}
+
+private func authenticateSliently(flutterResult: @escaping FlutterResult){
+    au.connectToGraphSliently(scopes: ApplicationConstants.kScopes){
+        (result: ApplicationConstants.MSGraphError?, accessToken: String) -> Bool  in
+        if let graphError = result {
+            switch graphError {
+            case .nsErrorType(let nsError):
+                print(NSLocalizedString("ERROR", comment: ""), nsError.userInfo)
+                flutterResult("authentication failed")
+            }
+            return false
+        }
+        else {
+            // run on main thread!!
+            flutterResult(accessToken)
             return true
         }
     }

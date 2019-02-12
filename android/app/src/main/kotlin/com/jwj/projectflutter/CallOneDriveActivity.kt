@@ -14,7 +14,14 @@ import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
-import com.microsoft.identity.client.*
+import com.microsoft.identity.client.AuthenticationCallback
+import com.microsoft.identity.client.AuthenticationResult
+import com.microsoft.identity.client.IAccount
+import com.microsoft.identity.client.PublicClientApplication
+import com.microsoft.identity.client.exception.MsalClientException
+import com.microsoft.identity.client.exception.MsalException
+import com.microsoft.identity.client.exception.MsalServiceException
+import com.microsoft.identity.client.exception.MsalUiRequiredException
 import org.json.JSONObject
 
 
@@ -60,9 +67,9 @@ class CallOneDriveActivity : Activity() {
 /* Attempt to get a user and acquireTokenSilent
 * If this fails we do an interactive request
 */
-        var users: List<User>?
+        var users: List<IAccount>?
         try {
-            users = sampleApp?.users?.toList()
+            users = sampleApp?.accounts?.toList()
 
             if (users != null && users.size == 1) {
                 /* We have 1 user */
@@ -182,7 +189,7 @@ class CallOneDriveActivity : Activity() {
         callGraphButton.visibility = View.INVISIBLE
         signOutButton.visibility = View.VISIBLE
         this.findViewById<View>(R.id.welcome).visibility = View.VISIBLE
-        findViewById<TextView>(R.id.welcome).text = "Welcome, " + authResult.user.name
+        findViewById<TextView>(R.id.welcome).text = "Welcome, " + authResult.account.username
         findViewById<View>(R.id.graphData).visibility = View.VISIBLE
     }
 
@@ -250,10 +257,10 @@ class CallOneDriveActivity : Activity() {
     private fun onSignOutClicked() {
 
         /* Attempt to get a user and remove their cookies from cache */
-        var users: List<User>? = null
+        var users: List<IAccount>? = null
 
         try {
-            users = sampleApp?.users
+            users = sampleApp?.accounts
 
             if (users == null) {
                 /* We have no users */
@@ -261,13 +268,13 @@ class CallOneDriveActivity : Activity() {
             } else if (users.size == 1) {
                 /* We have 1 user */
                 /* Remove from token cache */
-                sampleApp?.remove(users[0])
+                sampleApp?.removeAccount(users[0])
                 updateSignedOutUI()
 
             } else {
                 /* We have multiple users */
                 for (i in users.indices) {
-                    sampleApp?.remove(users[i])
+                    sampleApp?.removeAccount(users[i])
                 }
             }
 
