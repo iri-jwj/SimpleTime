@@ -1,5 +1,5 @@
 import 'package:path/path.dart';
-import 'package:project_flutter/sql/annual_plan_sql_helper.dart';
+import 'package:project_flutter/sql/sql_entity.dart';
 import 'package:sqflite/sqflite.dart';
 
 class BasicDatabase {
@@ -25,8 +25,10 @@ class BasicDatabase {
     String path = join(databasePath, "simpleTime.db");
     _database = await openDatabase(path, version: 1,
         onCreate: (Database db, int version) async {
-      //todo 当增加了新表时需要在这里加进来
-      db.execute(AnnualPlanSqlHelper.CREATE_ANNUAL_PLAN_TABLE);
+      db.execute(AnnualPlanSqlEntity.CREATE_ANNUAL_PLAN_TABLE);
+      db.execute(ScheduleSqlEntity.CREATE_ANNUAL_PLAN_TABLE);
+      db.execute(UpdatedDataEntity.CREATE_ANNUAL_PLAN_TABLE);
+      db.execute(ToDoSqlEntity.CREATE_ANNUAL_PLAN_TABLE);
     });
   }
 

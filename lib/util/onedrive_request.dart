@@ -1,9 +1,6 @@
 import 'dart:convert';
-import 'dart:io';
 
-import 'package:flutter/services.dart' show rootBundle;
 import 'package:http/http.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:project_flutter/util/shared_preference.dart';
 
 class OneDriveRequest {
@@ -14,20 +11,22 @@ class OneDriveRequest {
   static const String BASE_URL =
       "https://graph.microsoft.com/v1.0/me/drive/special/approot";
 
-  final Function _onErrorCallback;
-  final Function _onSuccessCallback;
-
   static const String PARENT_PATH = "/SimpleTime";
 
   static const String FILE_NAME = "SimpleTime.xml";
 
-  OneDriveRequest(this._sharedPreference, this._client, this._onSuccessCallback,
-      this._onErrorCallback) {
+  final bool isNewIsolate;
+
+  OneDriveRequest(this._sharedPreference, this._client, this.isNewIsolate) {
     _token = _sharedPreference.getData(SharedPreference.TOKEN_KEY);
     _client.setBaseUrl = BASE_URL;
     _client.setDefaultHeaders = <String, String>{
       "Authorization": "bearer $_token",
     };
+
+    if (isNewIsolate == false) {
+      //todo 关闭另一个Isolate
+    }
   }
 
   void createFile2OneDrive() {
@@ -49,39 +48,34 @@ class OneDriveRequest {
     });
   }
 
-  void uploadFile2OneDrive(Function onUploadSuccess,Function onUploadError) async {
+  void uploadFile2OneDrive(Function onUploadSuccess, Function onUploadError,
+      List<int> content) async {
     var url = ":$PARENT_PATH/$FILE_NAME:/content";
 
-    String path = (await getApplicationDocumentsDirectory()).path;
-    List<int> bytes;
-
-    File file = File("$path/test.xml");
-    if (await file.exists()) {
-      bytes = await file.readAsBytes();
-    } else {
-      String fileString = await rootBundle.loadString('assets/test.xml');
-      await file.writeAsString(fileString);
-      bytes = await file.readAsBytes();
-    }
     _client
-        .put(url, body: bytes, encoding: Encoding.getByName("utf-8"))
+        .put(url, body: content, encoding: Encoding.getByName("utf-8"))
         .then((Response response) {
       print(response.statusCode);
       print(response.body);
     });
   }
 
-  void downloadDataFromOneDrive(Function onDownloadSuccess, Function onDownloadError){
+  void downloadDataFromOneDrive(
+      Function onDownloadSuccess, Function onDownloadError) {
     var path = ":$PARENT_PATH/$FILE_NAME:/content";
 
-    _client.get(path).then((response){
-      if(response.statusCode == 200){
+    _client.get(path).then((response) {
+      if (response.statusCode == 200) {
         String result = response.body;
         onDownloadSuccess(result);
-      }else{
+      } else {
         onDownloadError();
       }
     });
+  }
+
+  void close(){
+    _client.close();
   }
 }
 
@@ -145,5 +139,11 @@ class ProjectClient extends BaseClient {
     } else {
       return super.patch(path, headers: headers);
     }
+  }
+
+  @override
+  void close() {
+    _client.close();
+    super.close();
   }
 }

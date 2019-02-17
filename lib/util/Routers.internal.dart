@@ -7,11 +7,11 @@
 import 'dart:convert';
 import 'package:annotation_route/route.dart';
 import 'package:project_flutter/scenes/annualplan/add_extends_annual_plan.dart';
+import 'package:project_flutter/scenes/annualplan/annual_plan_list.dart';
 import 'package:project_flutter/scenes/annualplan/add_normal_annual_plan.dart';
 import 'package:project_flutter/scenes/annualplan/annual_plan_detail.dart';
 import 'package:project_flutter/scenes/personalschedule/personal_schedule.dart';
 import 'package:project_flutter/scenes/synchronize/synchronize.dart';
-import 'package:project_flutter/scenes/annualplan/annual_plan_list.dart';
 
 class ARouterInternalImpl extends ARouterInternal {
   ARouterInternalImpl();
@@ -19,6 +19,9 @@ class ARouterInternalImpl extends ARouterInternal {
       <String, List<Map<String, dynamic>>>{
     'projectFlutter://AddExtendsAnnualPlan': [
       {'clazz': AddExtendsAnnualPlan}
+    ],
+    'projectFlutter://AnnualPlan': [
+      {'clazz': AnnualPlanPage}
     ],
     'projectFlutter://AddNormalAnnualPlan': [
       {'clazz': AddNormalAnnualPlan}
@@ -31,9 +34,6 @@ class ARouterInternalImpl extends ARouterInternal {
     ],
     'projectFlutter://synchronize': [
       {'clazz': SynchronizePage}
-    ],
-    'projectFlutter://AnnualPlan': [
-      {'clazz': AnnualPlanPage}
     ]
   };
 
@@ -60,6 +60,8 @@ class ARouterInternalImpl extends ARouterInternal {
     switch (clazz) {
       case AddExtendsAnnualPlan:
         return new AddExtendsAnnualPlan(option);
+      case AnnualPlanPage:
+        return new AnnualPlanPage(option);
       case AddNormalAnnualPlan:
         return new AddNormalAnnualPlan(option);
       case AnnualPlanDetail:
@@ -68,8 +70,6 @@ class ARouterInternalImpl extends ARouterInternal {
         return new PersonalSchedule(option);
       case SynchronizePage:
         return new SynchronizePage(option);
-      case AnnualPlanPage:
-        return new AnnualPlanPage(option);
       default:
         return null;
     }

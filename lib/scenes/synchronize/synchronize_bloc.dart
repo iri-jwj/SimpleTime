@@ -6,14 +6,16 @@ import 'package:project_flutter/util/shared_preference.dart';
 
 class SynchronizeBloc extends BaseBloc {
   SharedPreference _preference = SharedPreference();
-  OneDriveRequest _oneDriveRequest = OneDriveRequest(
-      SharedPreference(), ProjectClient(Client()), () {}, () {});
+  OneDriveRequest _oneDriveRequest =
+      OneDriveRequest(SharedPreference(), ProjectClient(Client()), false);
 
   static const _jumpPlugin =
       const MethodChannel('com.jwj.project_flutter/jump');
 
   @override
-  void depose() {}
+  void depose() {
+    _oneDriveRequest.close();
+  }
 
   Future<NativeResult> jumpToNative() async {
     String result;
@@ -44,12 +46,10 @@ class SynchronizeBloc extends BaseBloc {
   }
 
   void uploadData(Function onUploadSuccess, Function onUploadError) {
-    _oneDriveRequest.uploadFile2OneDrive(onUploadSuccess, onUploadError);
+    _oneDriveRequest.uploadFile2OneDrive(onUploadSuccess, onUploadError, [1]);
   }
 
-  void downloadData(Function onDownloadSuccess, Function onDownloadError){
-
-  }
+  void downloadData(Function onDownloadSuccess, Function onDownloadError) {}
 }
 
 enum NativeResult { insideFailed, configFailed, retry, success }

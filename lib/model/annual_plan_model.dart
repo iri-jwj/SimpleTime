@@ -1,9 +1,10 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:project_flutter/model/base_model.dart';
 
 part 'annual_plan_model.g.dart';
 
 @JsonSerializable()
-class AnnualPlanModel {
+class AnnualPlanModel extends BaseModel {
   @JsonKey(nullable: false)
   final String id;
   @JsonKey(nullable: false)
@@ -45,6 +46,7 @@ class AnnualPlanModel {
   factory AnnualPlanModel.fromJson(Map<String, dynamic> json) =>
       _$AnnualPlanModelFromJson(json);
 
+  @override
   Map<String, dynamic> toJson() => _$AnnualPlanModelToJson(this);
 }
 
