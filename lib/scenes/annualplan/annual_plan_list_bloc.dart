@@ -3,7 +3,6 @@ import 'package:project_flutter/scenes/base_bloc.dart';
 import 'package:project_flutter/sql/basic_database.dart';
 import 'package:project_flutter/sql/sql_entity.dart';
 import 'package:project_flutter/sql/sql_helper.dart';
-import 'package:project_flutter/util/bool_int_converter.dart';
 import 'package:rxdart/rxdart.dart';
 
 class AnnualPlanBloc extends BaseBloc {
@@ -33,13 +32,7 @@ class AnnualPlanBloc extends BaseBloc {
     var queryResult = await _helper.query(AnnualPlanSqlEntity.TABLE_NAME);
     List<AnnualPlanModel> newModels = List();
     queryResult.forEach((oneEntity) {
-      newModels.add(AnnualPlanModel.fromJson(
-          BoolIntConverter.mapConvertInt2Bool(oneEntity, [
-        "isCyclePlan",
-        "isAutoDelay",
-        "lastDayRemind",
-        "isAllYearPlan"
-      ])));
+      newModels.add(AnnualPlanModel.fromJson(oneEntity));
     });
     planList.clear();
     planList.addAll(newModels);

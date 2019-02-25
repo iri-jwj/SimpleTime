@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/services.dart';
 import 'package:http/http.dart';
 import 'package:project_flutter/scenes/base_bloc.dart';
@@ -6,15 +8,13 @@ import 'package:project_flutter/util/shared_preference.dart';
 
 class SynchronizeBloc extends BaseBloc {
   SharedPreference _preference = SharedPreference();
-  OneDriveRequest _oneDriveRequest =
-      OneDriveRequest(SharedPreference(), ProjectClient(Client()), false);
 
   static const _jumpPlugin =
       const MethodChannel('com.jwj.project_flutter/jump');
 
   @override
   void depose() {
-    _oneDriveRequest.close();
+    oneDriveRequest.close();
   }
 
   Future<NativeResult> jumpToNative() async {
@@ -42,11 +42,11 @@ class SynchronizeBloc extends BaseBloc {
   }
 
   void createFile() {
-    _oneDriveRequest.createFile2OneDrive();
+    oneDriveRequest.createFile2OneDrive();
   }
 
   void uploadData(Function onUploadSuccess, Function onUploadError) {
-    _oneDriveRequest.uploadFile2OneDrive(onUploadSuccess, onUploadError, [1]);
+    oneDriveRequest.uploadFile2OneDrive(onUploadSuccess, onUploadError, [1]);
   }
 
   void downloadData(Function onDownloadSuccess, Function onDownloadError) {}

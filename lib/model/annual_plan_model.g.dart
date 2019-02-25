@@ -8,7 +8,7 @@ part of 'annual_plan_model.dart';
 
 AnnualPlanModel _$AnnualPlanModelFromJson(Map<String, dynamic> json) {
   return AnnualPlanModel(json['id'] as String, json['title'] as String,
-      (json['progress'] as num).toDouble(), json['isCyclePlan'] as bool,
+      (json['progress'] as num).toDouble(), json['isCyclePlan'] as int,
       cycle: _$enumDecodeNullable(_$PlanCycleEnumMap, json['cycle']),
       remindDate: json['remindDate'] == null
           ? null
@@ -16,12 +16,12 @@ AnnualPlanModel _$AnnualPlanModelFromJson(Map<String, dynamic> json) {
       remark: json['remark'] as String,
       remindOpportunity: _$enumDecodeNullable(
           _$PlanRemindOpportunityEnumMap, json['remindOpportunity']),
-      isAutoDelay: json['isAutoDelay'] as bool,
-      lastDayRemind: json['lastDayRemind'] as bool,
+      isAutoDelay: json['isAutoDelay'] as int,
+      lastDayRemind: json['lastDayRemind'] as int,
       whenToStart: json['whenToStart'] == null
           ? null
           : DateTime.parse(json['whenToStart'] as String),
-      isAllYearPlan: json['isAllYearPlan'] as bool,
+      isAllYearPlan: json['isAllYearPlan'] as int,
       lastTimes: json['lastTimes'] as int);
 }
 

@@ -6,22 +6,10 @@ class DatabaseObserver {
 
   Function _onUpdateCallback;
 
-  DatabaseObserver(this._basicSqlHelper);
+  DatabaseObserver();
 
   void onTableUpdate(String targetTable, String id, DatabaseMethod method) {
     if (targetTable != UpdatedDataEntity.TABLE_NAME) {
-      int methodType = 0;
-      switch (method) {
-        case DatabaseMethod.update:
-          methodType = 0;
-          break;
-        case DatabaseMethod.insert:
-          methodType = 1;
-          break;
-        case DatabaseMethod.delete:
-          methodType = 2;
-          break;
-      }
       if (_onUpdateCallback != null) {
         _onUpdateCallback();
       }
@@ -29,10 +17,12 @@ class DatabaseObserver {
         UpdatedDataEntity.COLUMN_id: id,
         UpdatedDataEntity.COLUMN_tableName: targetTable,
         UpdatedDataEntity.COLUMN_isUpToDate: 0,
-        UpdatedDataEntity.COLUMN_method: methodType
+        UpdatedDataEntity.COLUMN_method: method.toString()
       });
     }
   }
+
+  set attachSqlHelper(BasicSqlHelper helper) => _basicSqlHelper = helper;
 
   set onUpdateCallback(Function callback) => _onUpdateCallback = callback;
 

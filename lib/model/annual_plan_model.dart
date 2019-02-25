@@ -6,11 +6,9 @@ part 'annual_plan_model.g.dart';
 @JsonSerializable()
 class AnnualPlanModel extends BaseModel {
   @JsonKey(nullable: false)
-  final String id;
-  @JsonKey(nullable: false)
   final String title; //标题
   @JsonKey(nullable: false)
-  final bool isCyclePlan; //是否是周期性计划
+  final int isCyclePlan; //是否是周期性计划
   @JsonKey(nullable: true)
   final PlanCycle cycle; //周期
   @JsonKey(nullable: true)
@@ -20,19 +18,19 @@ class AnnualPlanModel extends BaseModel {
   @JsonKey(nullable: true)
   final PlanRemindOpportunity remindOpportunity; //提醒时机
   @JsonKey(nullable: true)
-  final bool isAutoDelay; //自动延期
+  final int isAutoDelay; //自动延期
   @JsonKey(nullable: true)
-  final bool lastDayRemind; //最后一日提醒
+  final int lastDayRemind; //最后一日提醒
   @JsonKey(nullable: true)
   final DateTime whenToStart; //何时开始
   @JsonKey(nullable: true)
-  final bool isAllYearPlan; //是否全年计划
+  final int isAllYearPlan; //是否全年计划 0 false 1 true
   @JsonKey(nullable: true)
   final int lastTimes; //持续周期数
   @JsonKey(nullable: false)
   final double progress;
 
-  AnnualPlanModel(this.id, this.title, this.progress, this.isCyclePlan,
+  AnnualPlanModel(String id, this.title, this.progress, this.isCyclePlan,
       {this.cycle,
       this.remindDate,
       this.remark,
@@ -41,7 +39,7 @@ class AnnualPlanModel extends BaseModel {
       this.lastDayRemind,
       this.whenToStart,
       this.isAllYearPlan,
-      this.lastTimes});
+      this.lastTimes}):super(id);
 
   factory AnnualPlanModel.fromJson(Map<String, dynamic> json) =>
       _$AnnualPlanModelFromJson(json);

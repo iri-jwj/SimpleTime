@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:http/http.dart';
@@ -15,21 +16,24 @@ class OneDriveRequest {
 
   static const String FILE_NAME = "SimpleTime.xml";
 
-  final bool isNewIsolate;
+  bool isLogin = false;
 
-  OneDriveRequest(this._sharedPreference, this._client, this.isNewIsolate) {
+  OneDriveRequest(this._sharedPreference, this._client) {
     _token = _sharedPreference.getData(SharedPreference.TOKEN_KEY);
-    _client.setBaseUrl = BASE_URL;
-    _client.setDefaultHeaders = <String, String>{
-      "Authorization": "bearer $_token",
-    };
-
-    if (isNewIsolate == false) {
-      //todo 关闭另一个Isolate
+    if (_token != null || _token != "") {
+      isLogin = true;
+      _client.setBaseUrl = BASE_URL;
+      _client.setDefaultHeaders = <String, String>{
+        "Authorization": "bearer $_token",
+      };
     }
   }
 
   void createFile2OneDrive() {
+    if (!isLogin) {
+      return;
+    }
+
     var jsonString = json.encode(<String, Object>{
       "name": "SimpleTime",
       "folder": {},
@@ -50,6 +54,9 @@ class OneDriveRequest {
 
   void uploadFile2OneDrive(Function onUploadSuccess, Function onUploadError,
       List<int> content) async {
+    if (!isLogin) {
+      return;
+    }
     var url = ":$PARENT_PATH/$FILE_NAME:/content";
 
     _client
@@ -63,7 +70,9 @@ class OneDriveRequest {
   void downloadDataFromOneDrive(
       Function onDownloadSuccess, Function onDownloadError) {
     var path = ":$PARENT_PATH/$FILE_NAME:/content";
-
+    if (!isLogin) {
+      return;
+    }
     _client.get(path).then((response) {
       if (response.statusCode == 200) {
         String result = response.body;
@@ -74,7 +83,7 @@ class OneDriveRequest {
     });
   }
 
-  void close(){
+  void close() {
     _client.close();
   }
 }
