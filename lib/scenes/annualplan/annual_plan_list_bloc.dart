@@ -12,14 +12,14 @@ class AnnualPlanBloc extends BaseBloc {
 
   var _annualPlanListController = BehaviorSubject<List<AnnualPlanModel>>();
 
-  Sink get putPlanListController => _annualPlanListController.sink;
+  Sink get planListSink => _annualPlanListController.sink;
 
-  Observable<List<AnnualPlanModel>> get getPlanList =>
-      Observable(_annualPlanListController.stream);
+  Observable<List<AnnualPlanModel>> get planListStream =>
+      _annualPlanListController.stream;
 
   void removePlan(AnnualPlanModel targetToRemove) {
     planList.remove(targetToRemove);
-    putPlanListController.add(planList);
+    planListSink.add(planList);
   }
 
   editPlan(AnnualPlanModel targetEdited) {}
@@ -36,7 +36,7 @@ class AnnualPlanBloc extends BaseBloc {
     });
     planList.clear();
     planList.addAll(newModels);
-    putPlanListController.add(planList);
+    planListSink.add(planList);
   }
 
   addOnePlan(AnnualPlanModel plan) async {

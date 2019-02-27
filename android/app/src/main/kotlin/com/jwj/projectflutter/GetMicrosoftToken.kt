@@ -26,6 +26,10 @@ class GetMicrosoftToken(private val activity: Activity) {
     private val authority = "https://login.microsoftonline.com/common"
 
 
+    private val simpleTimeAccount = "simpleTime:Account"
+    private val simpleTimeToken = "simpleTime:Token"
+    private val simpleTimeError = "simpleTime:Error"
+
     private var sampleApp: PublicClientApplication? = null
     private val TAG = GetMicrosoftToken::class.java.simpleName
     private var authResult: AuthenticationResult? = null
@@ -88,7 +92,10 @@ class GetMicrosoftToken(private val activity: Activity) {
 
                 /* Store the authResult */
                 authResult = authenticationResult
-                sendResultToFlutter(authResult?.accessToken)
+                val resultString = "$simpleTimeAccount${authResult?.account}$simpleTimeAccount" +
+                        "$simpleTimeToken${authResult?.accessToken}$simpleTimeToken"
+
+                sendResultToFlutter(resultString)
                 /* call graph */
                 /* update the UI to post call Graph state */
             }
@@ -99,15 +106,15 @@ class GetMicrosoftToken(private val activity: Activity) {
                 when (exception) {
                     is MsalClientException -> {
                         /* Exception inside MSAL, more info inside MsalError.java */
-                        sendResultToFlutter("failed inside")
+                        sendResultToFlutter("${simpleTimeError}failed inside$simpleTimeError")
                     }
                     is MsalServiceException -> {
                         /* Exception when communicating with the STS, likely config issue */
-                        sendResultToFlutter("failed in config")
+                        sendResultToFlutter("${simpleTimeError}failed in config$simpleTimeError")
                     }
                     is MsalUiRequiredException -> {
                         /* Tokens expired or no session, retry with interactive */
-                        sendResultToFlutter("retry")
+                        sendResultToFlutter("${simpleTimeError}retry$simpleTimeError")
                     }
                 }
             }
@@ -115,7 +122,7 @@ class GetMicrosoftToken(private val activity: Activity) {
             override fun onCancel() {
                 /* User cancelled the authentication */
                 Log.d(TAG, "User cancelled login.")
-                res?.success("cancel")
+                res?.success("${simpleTimeError}cancel$simpleTimeError")
 
             }
         }
@@ -134,7 +141,10 @@ class GetMicrosoftToken(private val activity: Activity) {
 
                 /* Store the auth result */
                 authResult = authenticationResult
-                sendResultToFlutter(authResult?.accessToken)
+                val resultString = "$simpleTimeAccount${authResult?.account}$simpleTimeAccount" +
+                        "$simpleTimeToken${authResult?.accessToken}$simpleTimeToken"
+
+                sendResultToFlutter(resultString)
 
 
                 /* call Graph */
@@ -143,20 +153,20 @@ class GetMicrosoftToken(private val activity: Activity) {
 
             override fun onError(exception: MsalException) {
                 /* Failed to acquireToken */
-                Log.d(TAG, "Authentication failed: " + exception.toString())
+                Log.d(TAG, "Authentication failed: $exception")
                 if (exception is MsalClientException) {
                     /* Exception inside MSAL, more info inside MsalError.java */
-                    sendResultToFlutter("failed inside")
+                    sendResultToFlutter("${simpleTimeError}failed inside$simpleTimeError")
                 } else if (exception is MsalServiceException) {
                     /* Exception when communicating with the STS, likely config issue */
-                    sendResultToFlutter("failed config")
+                    sendResultToFlutter("${simpleTimeError}failed in config$simpleTimeError")
                 }
             }
 
             override fun onCancel() {
                 /* User cancelled the authentication */
                 Log.d(TAG, "User cancelled login.")
-                sendResultToFlutter("failed cancel")
+                res?.success("${simpleTimeError}cancel$simpleTimeError")
 
             }
         }

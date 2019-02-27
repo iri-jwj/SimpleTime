@@ -10,6 +10,9 @@ class Authentication {
     var authenticationProvider = MSALPublicClientApplication.init()
     var accessToken: String = ""
     var lastInitError: String? = ""
+    public static  var simpleTimeAccount = "simpleTime:Account"
+    public static  var simpleTimeToken = "simpleTime:Token"
+    public static  var simpleTimeError = "simpleTime:Error"
     
     init () {
         
@@ -47,7 +50,7 @@ class Authentication {
      */
     
     func connectToGraphSliently(scopes: [String],
-                                completion:@escaping (_ error: ApplicationConstants.MSGraphError?, _ accessToken: String) -> Bool) {
+                                completion:@escaping (_ error: ApplicationConstants.MSGraphError?, _ accessToken: String,_ account:String) -> Bool) {
         
         do {
             if let initError = self.lastInitError {
@@ -68,13 +71,12 @@ class Authentication {
                     
                     if error == nil {
                         self.accessToken = (result?.accessToken)!
-                        _ = completion(nil, self.accessToken);
+                        let account = (result?.account.username)!
+                        _ = completion(nil, self.accessToken,account);
                         
                     } else {
-                        
                         //"Could not acquire token silently: \(error ?? "No error information" as! Error )"
-                        var _ = completion(ApplicationConstants.MSGraphError.nsErrorType(error: error! as NSError), "");
-                        
+                        var _ = completion(ApplicationConstants.MSGraphError.nsErrorType(error: error! as NSError), "","retry");
                     }
                 }
             }
@@ -89,30 +91,28 @@ class Authentication {
                 authenticationProvider.acquireToken(forScopes: scopes) { (result, error) in
                     if error == nil {
                         self.accessToken = (result?.accessToken)!
-                        var _ = completion(nil, self.accessToken);
+                        let account = (result?.account.username)!
+                        var _ = completion(nil, self.accessToken,account);
                     } else  {
-                        var _ = completion(ApplicationConstants.MSGraphError.nsErrorType(error: error! as NSError), "");
+                        var _ = completion(ApplicationConstants.MSGraphError.nsErrorType(error: error! as NSError), "","failed inside");
                     }
                 }
                 
             } else {
-                var _ = completion(ApplicationConstants.MSGraphError.nsErrorType(error: error as NSError), error.localizedDescription);
-                
+                var _ = completion(ApplicationConstants.MSGraphError.nsErrorType(error: error as NSError), error.localizedDescription,"retry");
             }
             
         } catch {
             
             // This is the catch all error.
-            
-            
-            var _ = completion(ApplicationConstants.MSGraphError.nsErrorType(error: error as NSError), error.localizedDescription);
+           var _ = completion(ApplicationConstants.MSGraphError.nsErrorType(error: error as NSError), error.localizedDescription,"failed inside");
             
         }
     }
     
     
     func connectToGraph(scopes: [String],
-                        completion:@escaping (_ error: ApplicationConstants.MSGraphError?, _ accessToken: String) -> Bool)  {
+                        completion:@escaping (_ error: ApplicationConstants.MSGraphError?, _ accessToken: String,_ account:String) -> Bool)  {
         
         do {
             if let initError = self.lastInitError {
@@ -125,23 +125,23 @@ class Authentication {
             authenticationProvider.acquireToken(forScopes: scopes) { (result, error) in
                 if error == nil {
                     self.accessToken = (result?.accessToken)!
-                    var _ = completion(nil, self.accessToken);
+                    let account = (result?.account.username)!
+                    var _ = completion(nil, self.accessToken,account);
                 } else  {
-                    var _ = completion(ApplicationConstants.MSGraphError.nsErrorType(error: error! as NSError), "");
-                    
+                    var _ = completion(ApplicationConstants.MSGraphError.nsErrorType(error: error! as NSError), "","failed inside");
                 }
             }
         }  catch let error as NSError {
             // interactionRequired means we need to ask the user to sign-in. This usually happens
             // when the user's Refresh Token is expired or if the user has changed their password
             // among other possible reasons.
-                var _ = completion(ApplicationConstants.MSGraphError.nsErrorType(error: error as NSError), error.localizedDescription);
+                var _ = completion(ApplicationConstants.MSGraphError.nsErrorType(error: error as NSError), error.localizedDescription,"retry");
 
             
         } catch {
             
             // This is the catch all error.
-            var _ = completion(ApplicationConstants.MSGraphError.nsErrorType(error: error as NSError), error.localizedDescription);
+            var _ = completion(ApplicationConstants.MSGraphError.nsErrorType(error: error as NSError), error.localizedDescription,"failed inside");
             
         }
     }

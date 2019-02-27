@@ -40,7 +40,7 @@ class JumpToSynchronizePlugin(private val activity: Activity) : MethodChannel.Me
             "connectSlient" ->{
                 microsoftToken!!.getTokenSilent(p1)
             }
-            "disconnect" -> {
+            "logout" -> {
                 Log.d(TAG, "in disconnect")
                 val result = microsoftToken!!.signOut()
                 if (result) {

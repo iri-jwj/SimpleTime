@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class SharedPreference {
   static const String TOKEN_KEY = "oneDriveUserToken";
   static const String FIRST_LAUNCH = "isFirstLaunch";
+  static const String ACCOUNT = "account";
 
   static SharedPreference _instance;
 

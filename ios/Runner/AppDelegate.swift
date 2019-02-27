@@ -20,7 +20,7 @@ let au = Authentication.init()
             authenticate(flutterResult : result)
         case "connectSlient":
             authenticateSliently(flutterResult: result)
-        case "disconnect":
+        case "logout":
             unAuthenticate(flutterResult: result)
         default:
             result(FlutterMethodNotImplemented)
@@ -34,19 +34,19 @@ let au = Authentication.init()
 
 private func authenticate(flutterResult: @escaping FlutterResult){
         au.connectToGraph(scopes: ApplicationConstants.kScopes){
-       (result: ApplicationConstants.MSGraphError?, accessToken: String) -> Bool  in
+       (result: ApplicationConstants.MSGraphError?, accessToken: String,
+            account:String) -> Bool  in
         if let graphError = result {
             switch graphError {
             case .nsErrorType(let nsError):
                 print(NSLocalizedString("ERROR", comment: ""), nsError.userInfo)
-                flutterResult("authentication failed")
+                flutterResult(Authentication.simpleTimeError+account+Authentication.simpleTimeError)
             }
             return false
         }
         else {
             // run on main thread!!
-            flutterResult(accessToken)
-            
+            flutterResult(Authentication.simpleTimeAccount+account+Authentication.simpleTimeAccount+Authentication.simpleTimeToken + accessToken + Authentication.simpleTimeToken)
             return true
         }
     }
@@ -54,18 +54,18 @@ private func authenticate(flutterResult: @escaping FlutterResult){
 
 private func authenticateSliently(flutterResult: @escaping FlutterResult){
     au.connectToGraphSliently(scopes: ApplicationConstants.kScopes){
-        (result: ApplicationConstants.MSGraphError?, accessToken: String) -> Bool  in
+        (result: ApplicationConstants.MSGraphError?, accessToken: String,account:String) -> Bool  in
         if let graphError = result {
             switch graphError {
             case .nsErrorType(let nsError):
                 print(NSLocalizedString("ERROR", comment: ""), nsError.userInfo)
-                flutterResult("authentication failed")
+                flutterResult(Authentication.simpleTimeError+account+Authentication.simpleTimeError)
             }
             return false
         }
         else {
             // run on main thread!!
-            flutterResult(accessToken)
+            flutterResult(Authentication.simpleTimeAccount+account+Authentication.simpleTimeAccount+Authentication.simpleTimeToken + accessToken + Authentication.simpleTimeToken)
             return true
         }
     }

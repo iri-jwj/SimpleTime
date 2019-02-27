@@ -110,7 +110,7 @@ class _AnnualPlanPageState extends State<AnnualPlanPage> {
     ScreenUtil.instance = ScreenUtil(width: 1080, height: 1920)..init(context);
 
     return StreamBuilder<List<AnnualPlanModel>>(
-        stream: _annualPlanBloc.getPlanList,
+        stream: _annualPlanBloc.planListStream,
         builder: (context, planList) {
           List<AnnualPlanModel> plans = planList.data;
           if (plans == null || plans.length == 0) {
