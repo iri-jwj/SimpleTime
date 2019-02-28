@@ -42,9 +42,11 @@ class GetMicrosoftToken(private val activity: Activity) {
                     R.raw.auth_config)
         }
         try {
-
             if (sampleApp?.accounts?.size != 0) {
-                sampleApp?.accounts?.clear()
+                val accounts = sampleApp?.accounts!!
+                for (i in accounts) {
+                    sampleApp?.removeAccount(i)
+                }
             }
             sampleApp?.acquireToken(activity, scopes, getAuthInteractiveCallback())
         } catch (e: MsalClientException) {
@@ -76,10 +78,10 @@ class GetMicrosoftToken(private val activity: Activity) {
                 sampleApp?.acquireToken(activity, scopes, getAuthInteractiveCallback())
             }
         } catch (e: MsalClientException) {
-            Log.d(TAG, "MSAL Exception Generated while getting users: " + e.toString())
+            Log.d(TAG, "MSAL Exception Generated while getting users: $e")
 
         } catch (e: IndexOutOfBoundsException) {
-            Log.d(TAG, "User at this position does not exist: " + e.toString())
+            Log.d(TAG, "User at this position does not exist: $e")
         }
     }
 
@@ -92,7 +94,7 @@ class GetMicrosoftToken(private val activity: Activity) {
 
                 /* Store the authResult */
                 authResult = authenticationResult
-                val resultString = "$simpleTimeAccount${authResult?.account}$simpleTimeAccount" +
+                val resultString = "$simpleTimeAccount${authResult?.account?.username}$simpleTimeAccount" +
                         "$simpleTimeToken${authResult?.accessToken}$simpleTimeToken"
 
                 sendResultToFlutter(resultString)
@@ -102,7 +104,7 @@ class GetMicrosoftToken(private val activity: Activity) {
 
             override fun onError(exception: MsalException) {
                 /* Failed to acquireToken */
-                Log.d(TAG, "Authentication failed: " + exception.toString())
+                Log.d(TAG, "Authentication failed: $exception")
                 when (exception) {
                     is MsalClientException -> {
                         /* Exception inside MSAL, more info inside MsalError.java */
@@ -141,7 +143,7 @@ class GetMicrosoftToken(private val activity: Activity) {
 
                 /* Store the auth result */
                 authResult = authenticationResult
-                val resultString = "$simpleTimeAccount${authResult?.account}$simpleTimeAccount" +
+                val resultString = "$simpleTimeAccount${authResult?.account?.username}$simpleTimeAccount" +
                         "$simpleTimeToken${authResult?.accessToken}$simpleTimeToken"
 
                 sendResultToFlutter(resultString)
@@ -248,11 +250,11 @@ class GetMicrosoftToken(private val activity: Activity) {
                     }
             }
         } catch (e: MsalClientException) {
-            Log.d(TAG, "MSAL Exception Generated while getting users: " + e.toString())
+            Log.d(TAG, "MSAL Exception Generated while getting users: $e")
             result = false
 
         } catch (e: IndexOutOfBoundsException) {
-            Log.d(TAG, "User at this position does not exist: " + e.toString())
+            Log.d(TAG, "User at this position does not exist: $e")
             result = false
         }
         return result
