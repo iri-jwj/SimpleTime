@@ -19,7 +19,7 @@ abstract class BaseBloc {
   OneDriveRequest oneDriveRequest =
       OneDriveRequest(SharedPreference.instance, ProjectClient(Client()));
   DatabaseRW _databaseRW = DatabaseRW(BasicDatabase.instance);
-  BasicSqlHelper _helper = BasicSqlHelper(BasicDatabase.instance);
+  BasicSqlHelper helper = BasicSqlHelper(BasicDatabase.instance);
 
   Function onUploadSuccess;
   Function onUploadError;
@@ -30,7 +30,7 @@ abstract class BaseBloc {
       oneDriveRequest.uploadFile2OneDrive(
           onUploadSuccess, onUploadError, xmlBytes);
     };
-    _helper.attachToObserver(observer);
+    helper.attachToObserver(observer);
   }
 
   static Map<XmlTag, List<BaseModel>> _dataRepository = {

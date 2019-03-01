@@ -7,8 +7,8 @@ part of 'to_do_model.dart';
 // **************************************************************************
 
 ToDoModel _$ToDoModelFromJson(Map<String, dynamic> json) {
-  return ToDoModel(
-      json['id'] as String, json['title'] as String, json['importance'] as int,
+  return ToDoModel(json['id'] as String, json['title'] as String,
+      json['importance'] as int, json['isFinished'] as int,
       remindTime: json['remindTime'] == null
           ? null
           : DateTime.parse(json['remindTime'] as String),
@@ -20,5 +20,6 @@ Map<String, dynamic> _$ToDoModelToJson(ToDoModel instance) => <String, dynamic>{
       'title': instance.title,
       'importance': instance.importance,
       'remindTime': instance.remindTime?.toIso8601String(),
-      'content': instance.content
+      'content': instance.content,
+      'isFinished': instance.isFinished
     };

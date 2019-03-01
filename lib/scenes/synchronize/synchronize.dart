@@ -176,7 +176,6 @@ class _SynchronizeState extends State<SynchronizePage> {
 
   @override
   Widget build(BuildContext context) {
-    ScreenUtil.instance = ScreenUtil(width: 1080, height: 1920)..init(context);
     SynchronizeBloc _bloc = BlocProvider.of<SynchronizeBloc>(context);
     String account = _bloc.getAccount();
 

@@ -39,6 +39,7 @@ class ToDoSqlEntity {
   static const String COLUMN_importance = "importance";
   static const String COLUMN_remindTime = "remindTime";
   static const String COLUMN_content = "content";
+  static const String COLUMN_isFinished = "isFinished";
 
   static const String CREATE_ANNUAL_PLAN_TABLE = '''
 create table $TABLE_NAME ( 
@@ -46,7 +47,8 @@ create table $TABLE_NAME (
   $COLUMN_TITLE text not null,
   $COLUMN_importance int not null,
   $COLUMN_remindTime text,
-  $COLUMN_content text)
+  $COLUMN_content text,
+  $COLUMN_isFinished int not null)
 ''';
 }
 

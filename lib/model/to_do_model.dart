@@ -13,8 +13,10 @@ class ToDoModel extends BaseModel {
   final DateTime remindTime;
   @JsonKey(nullable: true)
   final String content;
+  @JsonKey(nullable: false)
+  final int isFinished;
 
-  ToDoModel(String id, this.title, this.importance,
+  ToDoModel(String id, this.title, this.importance,this.isFinished,
       {this.remindTime, this.content})
       : super(id);
 

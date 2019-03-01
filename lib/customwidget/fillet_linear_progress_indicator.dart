@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 const double _kLinearProgressIndicatorHeight = 6.0;
-const int _kIndeterminateLinearDuration = 1800;
 
 class _LinearProgressIndicatorPainter extends CustomPainter {
   const _LinearProgressIndicatorPainter(
@@ -119,8 +118,7 @@ class RoundedLinearProgressIndicator extends ProgressIndicator {
 class _RoundedLinearProgressIndicatorState
     extends State<RoundedLinearProgressIndicator>
     with SingleTickerProviderStateMixin {
-  Widget _buildIndicator(BuildContext context,
-      TextDirection textDirection) {
+  Widget _buildIndicator(BuildContext context, TextDirection textDirection) {
     if (widget.width != null && widget.height != null) {
       return widget._buildSemanticsWrapper(
         context: context,

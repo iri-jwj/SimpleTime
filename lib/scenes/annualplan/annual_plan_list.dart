@@ -107,8 +107,6 @@ class _AnnualPlanPageState extends State<AnnualPlanPage> {
 
   @override
   Widget build(BuildContext context) {
-    ScreenUtil.instance = ScreenUtil(width: 1080, height: 1920)..init(context);
-
     return StreamBuilder<List<AnnualPlanModel>>(
         stream: _annualPlanBloc.planListStream,
         builder: (context, planList) {
